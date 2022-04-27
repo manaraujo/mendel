@@ -2,7 +2,6 @@ package com.manaraujo.mendel.integration.controller;
 
 import com.manaraujo.mendel.AbstractTest;
 import com.manaraujo.mendel.model.Transaction;
-import com.manaraujo.mendel.repository.InMemoryTransactionRepository;
 import com.manaraujo.mendel.repository.TransactionRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.SpyBean;
@@ -15,12 +14,40 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class TransactionControllerTest extends AbstractTest {
 
     @SpyBean
     private TransactionRepository inMemoryTransactionRepository;
+
+    @Test
+    public void saveTransaction() throws Exception {
+        String uri = "/api/v1/transactions/1";
+
+        Map<String, String> body = Map.of(
+                "type", "test",
+                "amount", "100.0",
+                "parent_id", "2"
+        );
+
+        Transaction expectedSaved = new Transaction(1L, 100.0, "test", 2L);
+
+        String mvcResult = mvc.perform(put(uri)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJsonString(body)))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        Map<String, String> result = toObject(mvcResult, Map.class);
+
+        Transaction transaction = inMemoryTransactionRepository.getById(1L);
+
+        assertEquals("ok", result.get("status"));
+        assertEquals(expectedSaved, transaction);
+    }
 
     @Test
     public void getTransactionIdsByType() throws Exception {
@@ -43,8 +70,8 @@ public class TransactionControllerTest extends AbstractTest {
         List<Long> result = mapFromJsonList(mvcResult, Long.class);
 
         assertThat(result).hasSize(2);
-        assertEquals(result.get(0), 1);
-        assertEquals(result.get(0), 2);
+        assertEquals( 1, result.get(0));
+        assertEquals( 2, result.get(0));
     }
 
     @Test
@@ -65,7 +92,7 @@ public class TransactionControllerTest extends AbstractTest {
 
         Map<String, Double> result = toObject(mvcResult, Map.class);
 
-        assertEquals(result.get("sum"), 100.0);
+        assertEquals(100.0, result.get("sum"));
     }
 
     @Test
@@ -86,7 +113,7 @@ public class TransactionControllerTest extends AbstractTest {
 
         Map<String, Double> result = toObject(mvcResult, Map.class);
 
-        assertEquals(result.get("sum"), 300.0);
+        assertEquals(300.0, result.get("sum"));
     }
 
 }

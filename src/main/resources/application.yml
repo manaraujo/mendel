@@ -1,0 +1,5 @@
+spring:
+  mvc:
+    throw-exception-if-no-handler-found: true
+  jackson:
+    property-naming-strategy: SNAKE_CASE

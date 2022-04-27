@@ -14,7 +14,7 @@ public class TransactionService {
         return null;
     }
 
-    public Double sumTransactionWithChildren(Long transactionId) {
+    public Double sumTransactionAmountsTransitively(Long transactionId) {
         return null;
     }
 }

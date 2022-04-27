@@ -28,6 +28,10 @@ public abstract class AbstractTest {
     @Autowired
     protected ObjectMapper objectMapper;
 
+    protected String toJsonString(Object obj) throws JsonProcessingException {
+        return objectMapper.writeValueAsString(obj);
+    }
+
     protected <T> T toObject(String json, Class<T> clazz) throws JsonProcessingException {
         return objectMapper.readValue(json, clazz);
     }
