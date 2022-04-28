@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -17,13 +18,13 @@ public class TransactionService {
         inMemoryTransactionRepository.save(transaction);
     }
 
-    public List<Long> getTransactionIdsByType(String type) {
+    public Set<Long> getTransactionIdsByType(String type) {
         return inMemoryTransactionRepository.getIdsByType(type);
     }
 
     public Double sumTransactionAmountsTransitively(Long transactionId) {
         Transaction transaction = inMemoryTransactionRepository.getById(transactionId);
-        List<Transaction> children = inMemoryTransactionRepository.getChildren(transactionId);
+        Set<Transaction> children = inMemoryTransactionRepository.getChildren(transactionId);
 
         Double childrenAmount = children.stream()
                 .map(Transaction::getAmount)

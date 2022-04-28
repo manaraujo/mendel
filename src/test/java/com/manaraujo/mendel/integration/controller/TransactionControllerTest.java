@@ -8,8 +8,8 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.manaraujo.mendel.model.Transaction.buildTransaction;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -68,11 +68,10 @@ public class TransactionControllerTest extends AbstractTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        List<Long> result = mapFromJsonList(mvcResult, Long.class);
+        Set<Long> result = mapFromJsonSet(mvcResult, Long.class);
 
         assertThat(result).hasSize(2);
-        assertEquals( 1, result.get(0));
-        assertEquals( 2, result.get(0));
+        assertEquals(result, Set.of(1L, 2L));
     }
 
     @Test

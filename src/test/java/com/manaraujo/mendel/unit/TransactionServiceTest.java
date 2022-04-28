@@ -11,7 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.List;
+import java.util.Set;
 
 import static com.manaraujo.mendel.model.Transaction.buildTransaction;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -51,11 +51,11 @@ public class TransactionServiceTest {
     @Test
     public void getTransactionIdsByType() {
         String type = "test";
-        List<Long> expected = List.of(1L, 2L);
+        Set<Long> expected = Set.of(1L, 2L);
 
         when(inMemoryTransactionRepository.getIdsByType(eq(type))).thenReturn(expected);
 
-        List<Long> result = transactionService.getTransactionIdsByType(type);
+        Set<Long> result = transactionService.getTransactionIdsByType(type);
 
         verify(inMemoryTransactionRepository).getIdsByType(eq(type));
 
@@ -70,7 +70,7 @@ public class TransactionServiceTest {
         Transaction transaction = buildTransaction(transactionId, 100.0, "test", null);
 
         when(inMemoryTransactionRepository.getById(eq(transactionId))).thenReturn(transaction);
-        when(inMemoryTransactionRepository.getChildren(eq(transactionId))).thenReturn(List.of());
+        when(inMemoryTransactionRepository.getChildren(eq(transactionId))).thenReturn(Set.of());
 
         Double result = transactionService.sumTransactionAmountsTransitively(transactionId);
 
@@ -88,7 +88,7 @@ public class TransactionServiceTest {
         Transaction transaction = buildTransaction(transactionId, 100.0, "test", null);
         Transaction child1 = buildTransaction(transactionId, 120.0, "test", transactionId);
         Transaction child2 = buildTransaction(transactionId, 140.0, "test", transactionId);
-        List<Transaction> children = List.of(child1, child2);
+        Set<Transaction> children = Set.of(child1, child2);
 
         when(inMemoryTransactionRepository.getById(eq(transactionId))).thenReturn(transaction);
         when(inMemoryTransactionRepository.getChildren(eq(transactionId))).thenReturn(children);

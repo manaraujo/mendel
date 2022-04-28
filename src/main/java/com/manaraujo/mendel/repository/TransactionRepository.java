@@ -2,15 +2,15 @@ package com.manaraujo.mendel.repository;
 
 import com.manaraujo.mendel.model.Transaction;
 
-import java.util.List;
+import java.util.Set;
 
 public interface TransactionRepository {
 
     void save(Transaction transaction);
 
-    List<Long> getIdsByType(String type);
+    Set<Long> getIdsByType(String type);
 
     Transaction getById(Long transactionId);
 
-    List<Transaction> getChildren(Long transactionId);
+    Set<Transaction> getChildren(Long transactionId);
 }

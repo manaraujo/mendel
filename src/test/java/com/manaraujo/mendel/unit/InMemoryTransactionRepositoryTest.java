@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.List;
+import java.util.Set;
 
 import static com.manaraujo.mendel.model.Transaction.buildTransaction;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,6 +42,23 @@ public class InMemoryTransactionRepositoryTest {
     }
 
     @Test
+    public void save_parentNotFound() {
+        Transaction transaction = buildTransaction(1L, 100.0, "test", 2L);
+        assertThatThrownBy(() -> inMemoryTransactionRepository.save(transaction))
+                .isInstanceOf(NotFoundException.class)
+                .hasFieldOrPropertyWithValue("code", "not_found")
+                .hasFieldOrPropertyWithValue("description", "Parent_id 2 not found");
+    }
+
+    @Test
+    public void save_transactionId() {
+        Transaction transaction = buildTransaction(1L, 100.0, "test", 2L);
+        inMemoryTransactionRepository.save(transaction);
+        Transaction saved = inMemoryTransactionRepository.getById(transaction.getTransactionId());
+        assertEquals(transaction, saved);
+    }
+
+    @Test
     public void getById() {
         Transaction transaction = buildTransaction(1L, 100.0, "test", null);
         inMemoryTransactionRepository.save(transaction);
@@ -64,9 +81,9 @@ public class InMemoryTransactionRepositoryTest {
         inMemoryTransactionRepository.save(transaction1);
         inMemoryTransactionRepository.save(transaction2);
 
-        List<Transaction> result = inMemoryTransactionRepository.getChildren(1L);
+        Set<Transaction> result = inMemoryTransactionRepository.getChildren(1L);
 
-        assertEquals(List.of(transaction2), result);
+        assertEquals(Set.of(transaction2), result);
     }
 
     @Test
@@ -74,7 +91,7 @@ public class InMemoryTransactionRepositoryTest {
         Transaction transaction1 = buildTransaction(1L, 100.0, "test_1", null);
         inMemoryTransactionRepository.save(transaction1);
 
-        List<Transaction> result = inMemoryTransactionRepository.getChildren(2L);
+        Set<Transaction> result = inMemoryTransactionRepository.getChildren(2L);
 
         assertThat(result).isEmpty();
     }
@@ -93,9 +110,9 @@ public class InMemoryTransactionRepositoryTest {
         inMemoryTransactionRepository.save(transaction2);
         inMemoryTransactionRepository.save(transaction3);
 
-        List<Long> result = inMemoryTransactionRepository.getIdsByType("test_1");
+        Set<Long> result = inMemoryTransactionRepository.getIdsByType("test_1");
 
-        assertEquals(List.of(1L, 2L), result);
+        assertEquals(Set.of(1L, 2L), result);
     }
 
 }

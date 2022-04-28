@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import javax.validation.Valid;
 import java.util.Map;
+import java.util.Set;
 
 @RequestMapping("api/v1/transactions")
 @RequiredArgsConstructor
@@ -25,7 +26,7 @@ public class TransactionController {
 
     @PutMapping("/{transaction_id}")
     public @ResponseBody ResponseEntity<Map<String, String>> saveTransaction(
-            @RequestBody TransactionDTO transactionDTO,
+            @Valid @RequestBody TransactionDTO transactionDTO,
             @PathVariable(value = "transaction_id") Long transactionId) {
         Transaction transaction = transactionDTO.toTransaction(transactionId);
         transactionService.saveTransaction(transaction);
@@ -33,13 +34,13 @@ public class TransactionController {
     }
 
     @GetMapping("/types/{type}")
-    public @ResponseBody List<Long> getTransactionIdsByType(@PathVariable String type) {
+    public @ResponseBody Set<Long> getTransactionIdsByType(@PathVariable String type) {
         return transactionService.getTransactionIdsByType(type);
     }
 
     @GetMapping("/sum/{transaction_id}")
     public ResponseEntity<Map<String, Double>> sumTransactionAmountsTransitively(
-            @PathVariable( value = "transaction_id") Long transactionId) {
+            @PathVariable(value = "transaction_id") Long transactionId) {
         Double totalAmount = transactionService.sumTransactionAmountsTransitively(transactionId);
         return ResponseEntity.ok(Map.of("sum", totalAmount));
     }

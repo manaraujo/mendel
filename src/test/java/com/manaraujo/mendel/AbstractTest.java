@@ -12,7 +12,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
+import java.util.Set;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = MendelApplication.class)
@@ -36,8 +36,8 @@ public abstract class AbstractTest {
         return objectMapper.readValue(json, clazz);
     }
 
-    protected <T> List<T> mapFromJsonList(String json, Class<T> clazz) throws JsonProcessingException {
-        return objectMapper.readValue(json, objectMapper.getTypeFactory().constructCollectionType(List.class, clazz));
+    protected <T> Set<T> mapFromJsonSet(String json, Class<T> clazz) throws JsonProcessingException {
+        return objectMapper.readValue(json, objectMapper.getTypeFactory().constructCollectionType(Set.class, clazz));
     }
 
 }
