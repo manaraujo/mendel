@@ -6,19 +6,20 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import static com.manaraujo.mendel.model.Transaction.buildTransaction;
+
 @Getter
 @Setter
 @Data
 @Builder
 public class TransactionDTO {
 
-    private Long transactionId;
     private Double amount;
     private String type;
     private Long parentId;
 
     public Transaction toTransaction(Long transactionId) {
-        return new Transaction(transactionId, amount, type, parentId);
+        return buildTransaction(transactionId, amount, type, parentId);
     }
 
 }

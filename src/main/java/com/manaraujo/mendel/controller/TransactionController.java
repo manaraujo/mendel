@@ -34,7 +34,7 @@ public class TransactionController {
 
     @GetMapping("/types/{type}")
     public @ResponseBody List<Long> getTransactionIdsByType(@PathVariable String type) {
-        return transactionService.getByType(type);
+        return transactionService.getTransactionIdsByType(type);
     }
 
     @GetMapping("/sum/{transaction_id}")

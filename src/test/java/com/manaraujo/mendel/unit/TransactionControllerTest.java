@@ -11,10 +11,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 
-import static java.lang.Boolean.TRUE;
+import static com.manaraujo.mendel.model.Transaction.buildTransaction;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
@@ -37,7 +35,7 @@ public class TransactionControllerTest extends AbstractTest {
                 "parent_id", "2"
         );
 
-        Transaction transaction = new Transaction(1L, 100.0, "test", 2L);
+        Transaction transaction = buildTransaction(1L, 100.0, "test", 2L);
 
         doNothing().when(transactionService).saveTransaction(eq(transaction));
 
@@ -61,7 +59,7 @@ public class TransactionControllerTest extends AbstractTest {
 
         List<Long> expected = List.of(1L, 2L);
 
-        when(transactionService.getByType(eq("test"))).thenReturn(expected);
+        when(transactionService.getTransactionIdsByType(eq("test"))).thenReturn(expected);
 
         String mvcResult = mvc.perform(get(uri)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -69,7 +67,7 @@ public class TransactionControllerTest extends AbstractTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        verify(transactionService).getByType(eq("test"));
+        verify(transactionService).getTransactionIdsByType(eq("test"));
 
         List<Long> result = mapFromJsonList(mvcResult, Long.class);
 
@@ -84,7 +82,7 @@ public class TransactionControllerTest extends AbstractTest {
 
         List<Long> expected = List.of();
 
-        when(transactionService.getByType(eq("test"))).thenReturn(expected);
+        when(transactionService.getTransactionIdsByType(eq("test"))).thenReturn(expected);
 
         String mvcResult = mvc.perform(get(uri)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -92,7 +90,7 @@ public class TransactionControllerTest extends AbstractTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        verify(transactionService).getByType(eq("test"));
+        verify(transactionService).getTransactionIdsByType(eq("test"));
 
         List<Long> result = mapFromJsonList(mvcResult, Long.class);
 

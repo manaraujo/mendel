@@ -8,7 +8,7 @@ public interface TransactionRepository {
 
     void save(Transaction transaction);
 
-    List<Long> getByTypes(String type);
+    List<Long> getIdsByType(String type);
 
     Transaction getById(Long transactionId);
 
