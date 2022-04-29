@@ -3,6 +3,7 @@ package com.manaraujo.mendel.unit;
 import com.manaraujo.mendel.exception.NotFoundException;
 import com.manaraujo.mendel.model.Transaction;
 import com.manaraujo.mendel.repository.InMemoryTransactionRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,11 @@ public class InMemoryTransactionRepositoryTest {
     @Autowired
     private InMemoryTransactionRepository inMemoryTransactionRepository;
 
+    @BeforeEach
+    void init() {
+        inMemoryTransactionRepository = new InMemoryTransactionRepository();
+    }
+
     @Test
     public void save() {
         Transaction transaction = buildTransaction(1L, 100.0, "test", null);
@@ -48,14 +54,6 @@ public class InMemoryTransactionRepositoryTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasFieldOrPropertyWithValue("code", "not_found")
                 .hasFieldOrPropertyWithValue("description", "Parent_id 2 not found");
-    }
-
-    @Test
-    public void save_transactionId() {
-        Transaction transaction = buildTransaction(1L, 100.0, "test", 2L);
-        inMemoryTransactionRepository.save(transaction);
-        Transaction saved = inMemoryTransactionRepository.getById(transaction.getTransactionId());
-        assertEquals(transaction, saved);
     }
 
     @Test

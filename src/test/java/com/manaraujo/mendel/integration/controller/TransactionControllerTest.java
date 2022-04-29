@@ -29,11 +29,10 @@ public class TransactionControllerTest extends AbstractTest {
 
         Map<String, String> body = Map.of(
                 "type", "test",
-                "amount", "100.0",
-                "parent_id", "2"
+                "amount", "100.0"
         );
 
-        Transaction expectedSaved = buildTransaction(1L, 100.0, "test", 2L);
+        Transaction expectedSaved = buildTransaction(1L, 100.0, "test", null);
 
         String mvcResult = mvc.perform(put(uri)
                         .contentType(MediaType.APPLICATION_JSON)
