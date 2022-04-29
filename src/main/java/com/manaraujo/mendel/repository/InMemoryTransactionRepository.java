@@ -36,7 +36,8 @@ public class InMemoryTransactionRepository implements TransactionRepository {
 
     @Override
     public Set<Long> getIdsByType(String type) {
-        return Optional.ofNullable(transactionIdsGroupedByType.get(type)).orElse(Set.of());
+        return Optional.ofNullable(transactionIdsGroupedByType.get(type))
+                .orElseThrow(() -> new NotFoundException(String.format("Type %s not found", type)));
     }
 
     @Override

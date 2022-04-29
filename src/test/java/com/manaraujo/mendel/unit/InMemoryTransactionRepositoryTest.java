@@ -98,7 +98,10 @@ public class InMemoryTransactionRepositoryTest {
 
     @Test
     public void getByType_empty() {
-        assertThat(inMemoryTransactionRepository.getIdsByType("test")).isEmpty();
+        assertThatThrownBy(() -> inMemoryTransactionRepository.getIdsByType("test"))
+                .isInstanceOf(NotFoundException.class)
+                .hasFieldOrPropertyWithValue("code", "not_found")
+                .hasFieldOrPropertyWithValue("description", "Type test not found");
     }
 
     @Test
